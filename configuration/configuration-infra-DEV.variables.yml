@@ -9,7 +9,7 @@ variables:
   ENVIRONMENT: DEV
   RESOURCE_GROUP: mlopsv1demo
   LOCATION: westeurope
-  NAMESPACE: mlopsdevtmpl
+  NAMESPACE: mlopsdasdemo
   SERVICECONNECTION_RG: svcdevconnection
   SERVICECONNECTION_WS: svcdevconnection
   AMLWORKSPACE: aml$(NAMESPACE)
