@@ -7,7 +7,7 @@ variables:
 
   # DEV Environment
   ENVIRONMENT: DEV
-  RESOURCE_GROUP: rg-mlops-template-dev-001
+  RESOURCE_GROUP: mlopsv1demo
   LOCATION: westeurope
   NAMESPACE: mlopsdevtmpl
   SERVICECONNECTION_RG: svcdevconnection
