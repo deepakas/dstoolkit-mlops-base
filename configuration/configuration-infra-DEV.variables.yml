@@ -11,7 +11,7 @@ variables:
   LOCATION: westeurope
   NAMESPACE: mlopsdasdemo
   SERVICECONNECTION_RG: svcdevconnection
-  SERVICECONNECTION_WS: svcdevconnection
+  SERVICECONNECTION_WS: devmlsvcconnection
   AMLWORKSPACE: aml$(NAMESPACE)
   STORAGEACCOUNT: sa$(NAMESPACE)
   KEYVAULT: kv$(NAMESPACE)
