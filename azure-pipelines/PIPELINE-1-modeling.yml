@@ -54,71 +54,71 @@ stages:
           targetPath: '$(Build.SourcesDirectory)'
 
 
-############################
-##  UPDATE TRAINING DATA  ##
-############################
+# ############################
+# ##  UPDATE TRAINING DATA  ##
+# ############################
 
-- stage: update_data
-  displayName: 'Update Data for Training/Retraining'
-  dependsOn: build_code
-  jobs:
-  - template: templates/update-data.template.yml
-    parameters:
-      serviceConnection: $(SERVICECONNECTION_WS)
-      resourceGroup: $(RESOURCE_GROUP)
-      amlWorkspace: $(AMLWORKSPACE)
-
-
-####################
-##  RUN TRAINING  ##
-####################
-
-- stage: training
-  displayName: 'Model Training/Retraining'
-  dependsOn: update_data
-  jobs:
-
-    - template: templates/utils/deploy-aml-endpoint.template.yml
-      parameters:
-        environment: $(ENVIRONMENT)
-        jobName: training_build
-        jobDisplayName: 'Deploy Training AML Pipeline'
-        serviceConnection: $(SERVICECONNECTION_WS)
-        resourceGroup: $(RESOURCE_GROUP)
-        amlWorkspace: $(AMLWORKSPACE)
-        artifactName: $(ARTIFACT_NAME)
-        deploymentScript: operation/execution/build_training_pipeline.py
-        scriptArguments: --version $(Build.BuildId)
-
-    - template: templates/utils/invoke-aml-pipeline.template.yml
-      parameters:
-        dependsOn: training_build
-        jobDisplayName: 'Invoke Training AML Pipeline'
-        serviceConnection: $(SERVICECONNECTION_WS)
-        resourceGroup: $(RESOURCE_GROUP)
-        amlWorkspace: $(AMLWORKSPACE)
-        pipelineName: $(AML_TRAINING_PIPELINE)
-        experimentName: $(AML_TRAINING_EXPERIMENT)
+# - stage: update_data
+#   displayName: 'Update Data for Training/Retraining'
+#   dependsOn: build_code
+#   jobs:
+#   - template: templates/update-data.template.yml
+#     parameters:
+#       serviceConnection: $(SERVICECONNECTION_WS)
+#       resourceGroup: $(RESOURCE_GROUP)
+#       amlWorkspace: $(AMLWORKSPACE)
 
 
-#########################################
-##  DEPLOY IN ACI (dev/test purposes)  ##
-#########################################
+# ####################
+# ##  RUN TRAINING  ##
+# ####################
 
-- stage: deploy_model_aci
-  displayName: 'Deploy Model to ACI'
-  dependsOn: training
-  jobs:
-  - template: templates/deploy-model.template.yml
-    parameters:
-      environment: $(ENVIRONMENT)
-      serviceConnection: $(SERVICECONNECTION_WS)
-      resourceGroup: $(RESOURCE_GROUP)
-      amlWorkspace: $(AMLWORKSPACE)
-      deploymentType: aci
-      webserviceName: $(AML_WEBSERVICE)-aci
-      deleteAfterwards: true
-      artifactName: $(ARTIFACT_NAME)
+# - stage: training
+#   displayName: 'Model Training/Retraining'
+#   dependsOn: update_data
+#   jobs:
+
+#     - template: templates/utils/deploy-aml-endpoint.template.yml
+#       parameters:
+#         environment: $(ENVIRONMENT)
+#         jobName: training_build
+#         jobDisplayName: 'Deploy Training AML Pipeline'
+#         serviceConnection: $(SERVICECONNECTION_WS)
+#         resourceGroup: $(RESOURCE_GROUP)
+#         amlWorkspace: $(AMLWORKSPACE)
+#         artifactName: $(ARTIFACT_NAME)
+#         deploymentScript: operation/execution/build_training_pipeline.py
+#         scriptArguments: --version $(Build.BuildId)
+
+#     - template: templates/utils/invoke-aml-pipeline.template.yml
+#       parameters:
+#         dependsOn: training_build
+#         jobDisplayName: 'Invoke Training AML Pipeline'
+#         serviceConnection: $(SERVICECONNECTION_WS)
+#         resourceGroup: $(RESOURCE_GROUP)
+#         amlWorkspace: $(AMLWORKSPACE)
+#         pipelineName: $(AML_TRAINING_PIPELINE)
+#         experimentName: $(AML_TRAINING_EXPERIMENT)
+
+
+# #########################################
+# ##  DEPLOY IN ACI (dev/test purposes)  ##
+# #########################################
+
+# - stage: deploy_model_aci
+#   displayName: 'Deploy Model to ACI'
+#   dependsOn: training
+#   jobs:
+#   - template: templates/deploy-model.template.yml
+#     parameters:
+#       environment: $(ENVIRONMENT)
+#       serviceConnection: $(SERVICECONNECTION_WS)
+#       resourceGroup: $(RESOURCE_GROUP)
+#       amlWorkspace: $(AMLWORKSPACE)
+#       deploymentType: aci
+#       webserviceName: $(AML_WEBSERVICE)-aci
+#       deleteAfterwards: true
+#       artifactName: $(ARTIFACT_NAME)
 
 
 #####################
